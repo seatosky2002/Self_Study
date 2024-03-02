@@ -1,0 +1,62 @@
+"""
+At the command line, only need to run once to install the package via pip:
+
+$ pip install google-generativeai
+"""
+
+import google.generativeai as genai
+
+genai.configure(api_key="AIzaSyCXGxI6oVEIDHQcnT9ks8u6Zt3l5ImUf8c")
+
+# Set up the model
+generation_config = {
+  "temperature": 0.9,
+  "top_p": 1,
+  "top_k": 1,
+  "max_output_tokens": 2048,
+}
+
+sumarizethefollowing = """Artificial intelligence (AI) has emerged as one of the most significant technological advancements of our time, with the potential to transform numerous aspects of human life. From self-driving cars to automated medical diagnoses, AI is rapidly becoming an integral part of our society. However, like any powerful technology, AI comes with both immense potential and inherent risks. This essay aims to explore the double-edged nature of AI, examining its transformative benefits as well as its potential pitfalls. **Benefits of AI**
+AI offers a myriad of benefits that have the potential to revolutionize industries and improve our daily lives. By harnessing vast amounts of data and sophisticated algorithms, AI systems can solve complex problems and automate tasks with unprecedented efficiency and accuracy. For instance, AI-powered algorithms can analyze medical images to detect diseases earlier and more precisely than human radiologists. Similarly, AI can help streamline manufacturing processes by optimizing production lines and reducing downtime.
+Furthermore, AI has the potential to create new products and services that were previously unimaginable. AI-driven chatbots provide 24/7 customer support, virtual assistants help us manage our schedules, and self-driving cars promise to reduce traffic congestion and improve safety. By embracing AI, businesses can gain a competitive advantage and drive innovation.
+Risks of AI While the benefits of AI are undeniable, it is essential to be mindful of the potential risks and challenges associated with this technology. One of the most pressing concerns is the potential for job displacement. As AI systems become increasingly sophisticated, they may automate tasks currently performed by humans, leading to job losses in various industries. It is crucial that we consider the implications of this technological shift and develop strategies to mitigate its negative effects. 
+Another risk associated with AI is the potential for bias and discrimination. If AI algorithms are trained on data that reflects existing societal biases, they may perpetuate these biases in their decisions. For example, AI-powered hiring systems could discriminate against certain demographic groups if the training data contained biases against those groups. It is imperative that we design AI systems to be fair, unbiased, and transparent.
+Conclusion
+Artificial intelligence is a double-edged sword with the potential to both revolutionize our world and create significant challenges. While AI offers immense benefits in terms of efficiency, innovation, and convenience, it is essential that we approach its development and deployment with caution. By carefully considering the ethical implications and potential risks, we can harness the transformative power of AI while mitigating its potential pitfalls.
+As we navigate the rapidly changing landscape of AI, it is crucial to engage in open and collaborative discussions about its impact on society. By working together, we can ensure that AI is developed and used in a responsible and ethical manner, maximizing its benefits while minimizing its risks. Ultimately, the true measure of AI's success will lie not only in its technological capabilities but also in its ability to create a more equitable, sustainable, and flourishing world for generations to come."""
+safety_settings = [
+  {
+    "category": "HARM_CATEGORY_HARASSMENT",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+  },
+  {
+    "category": "HARM_CATEGORY_HATE_SPEECH",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+  },
+  {
+    "category": "HARM_CATEGORY_SEXUALLY_EXPLICIT",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+  },
+  {
+    "category": "HARM_CATEGORY_DANGEROUS_CONTENT",
+    "threshold": "BLOCK_MEDIUM_AND_ABOVE"
+  },
+]
+
+model = genai.GenerativeModel(model_name="gemini-1.0-pro",
+                              generation_config=generation_config,
+                              safety_settings=safety_settings)
+
+convo = model.start_chat(history=[
+  {
+    "role": "user",
+    "parts": ["essay on ai"]
+  },
+  {
+    "role": "model",
+    "parts": ["**Artificial Intelligence: A Revolution in the Making**\n\nArtificial intelligence (AI) has emerged as one of the most significant technological advancements of our time, poised to transform numerous aspects of human life. From self-driving cars to automated medical diagnoses, AI is rapidly becoming an integral part of our society. This essay aims to elucidate the profound impact AI will have on the world, exploring its potential benefits and ethical implications.\n\n**Benefits of AI**\n\nOne of the most promising aspects of AI is its ability to solve complex problems and automate tasks. By harnessing vast amounts of data and sophisticated algorithms, AI systems can perform repetitive and error-prone tasks with unprecedented efficiency and accuracy. For instance, AI-powered algorithms can analyze medical images to detect diseases earlier and more precisely than human radiologists. Similarly, AI can help streamline manufacturing processes by optimizing production lines and reducing downtime.\n\nFurthermore, AI has the potential to revolutionize industries by creating new products and services. AI-driven chatbots provide 24/7 customer support, virtual assistants help us manage our schedules, and self-driving cars promise to reduce traffic congestion and improve safety. By embracing AI, businesses can gain a competitive advantage and drive innovation.\n\n**Ethical Implications**\n\nWhile the benefits of AI are undeniable, it also raises a number of ethical concerns. One of the most pressing issues is the potential for job displacement. As AI systems become increasingly sophisticated, they may automate tasks currently performed by humans, leading to job losses in various industries. It is essential that we consider the implications of this technological shift and develop strategies to mitigate its negative effects.\n\nAnother ethical concern is the potential for AI systems to exacerbate bias and discrimination. If AI algorithms are trained on data that reflects existing societal biases, they may perpetuate these biases in their decisions. For example, AI-powered hiring systems could discriminate against certain demographic groups if the training data contained biases against those groups. It is crucial that we design AI systems to be fair, unbiased, and transparent.\n\n**Conclusion**\n\nArtificial intelligence is a transformative technology with the potential to revolutionize multiple aspects of human life. By harnessing vast amounts of data and sophisticated algorithms, AI systems can solve complex problems, automate tasks, and create new products and services. However, it is imperative that we approach the development and deployment of AI with caution, considering its ethical implications and developing safeguards to ensure that it benefits all of society.\n\nAs we navigate the rapidly changing landscape of AI, it is essential to engage in open and collaborative discussions about its potential impact. By working together, we can harness the transformative power of AI while mitigating its potential risks. Ultimately, the true measure of AI's success will not only lie in its technological capabilities but also in its ability to create a more equitable, sustainable, and flourishing world for generations to come."]
+  },
+])
+
+convo.send_message(sumarizethefollowing + " \n sumarize the following")
+print(convo.last.text)
